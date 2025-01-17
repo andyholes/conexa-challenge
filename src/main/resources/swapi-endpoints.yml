@@ -1,0 +1,15 @@
+swapi:
+  base-url: "${BASE_URL:https://swapi.tech/api}"
+  endpoints:
+    people-paginated: "${swapi.base-url}${PEOPLE_PAGINATED:/people?page=%s&limit=%s}"
+    people-by-id: "${swapi.base-url}${PEOPLE_BY_ID:/people/%s}"
+    people-by-name: "${swapi.base-url}${PEOPLE_BY_NAME:/people/?name=%s}"
+    vehicles-paginated: "${swapi.base-url}${VEHICLES_PAGINATED:/vehicles?page=%s&limit=%s}"
+    vehicles-by-id: "${swapi.base-url}${VEHICLES_BY_ID:/vehicles/%s}"
+    vehicles-by-name: "${swapi.base-url}${VEHICLES_BY_NAME:/vehicles/?name=%s}"
+    starships-paginated: "${swapi.base-url}${STARSHIPS_PAGINATED:/starships?page=%s&limit=%s}"
+    starships-by-id: "${swapi.base-url}${STARSHIPS_BY_ID:/starships/%s}"
+    starships-by-name: "${swapi.base-url}${STARSHIPS_BY_NAME:/starships/?name=%s}"
+    films-all: "${swapi.base-url}${FILMS_ALL:/films}"
+    films-by-id: "${swapi.base-url}${FILMS_BY_ID:/films/%s}"
+    films-by-title: "${swapi.base-url}${FILMS_BY_TITLE:/films/?title=%s}"
