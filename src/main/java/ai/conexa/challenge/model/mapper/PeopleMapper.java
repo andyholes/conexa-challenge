@@ -4,19 +4,10 @@ import ai.conexa.challenge.model.response.PeopleResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class PeopleMapper extends BaseMapper{
 
-    public static List<PeopleResponse> mapToPeopleResponseList(Map<String, Object> jsonString) {
-        return getPropertiesinResultList(jsonString).stream().map(PeopleMapper::buildPeopleResponse).collect(Collectors.toList());
-    }
-
-    public static PeopleResponse mapToPeopleResponse(Map<String, Object> jsonString) {
-        return buildPeopleResponse(getPropertiesInResult(jsonString));
-    }
-
-    private static PeopleResponse buildPeopleResponse(Map<String, Object> properties) {
+    public static PeopleResponse mapToPeopleResponse(Map<String, Object> properties) {
         return PeopleResponse.builder()
                 .name((String) properties.get("name"))
                 .birthYear((String) properties.get("birth_year"))

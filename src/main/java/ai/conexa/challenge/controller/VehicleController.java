@@ -11,19 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-import static ai.conexa.challenge.util.UrlConstants.BASE_MAPPING;
-
 @RestController
-@RequestMapping(BASE_MAPPING + "/vehicles")
+@RequestMapping("/vehicles")
 @RequiredArgsConstructor
 public class VehicleController {
     private final VehicleService vehicleService;
 
     @GetMapping
-    public ResponseEntity<PaginatedResponse> getAllPaginated(@RequestParam(defaultValue = "1") int page,
-                                                             @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PaginatedResponse> getAllPaginated(@RequestParam(defaultValue = "1") @Min(1) int page,
+                                                             @RequestParam(defaultValue = "10") @Min(1) int size) {
         return ResponseEntity.ok(vehicleService.getAllPaginated(page, size));
     }
 
@@ -33,7 +33,7 @@ public class VehicleController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<VehicleResponse>> getByName(@RequestParam String name) {
+    public ResponseEntity<List<VehicleResponse>> getByName(@RequestParam @NotBlank String name) {
         return ResponseEntity.ok(vehicleService.getByName(name));
     }
 }

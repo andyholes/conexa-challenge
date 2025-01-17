@@ -10,12 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
-import static ai.conexa.challenge.util.UrlConstants.BASE_MAPPING;
-
 @RestController
-@RequestMapping(BASE_MAPPING + "/films")
+@RequestMapping("/films")
 @RequiredArgsConstructor
 public class FilmController {
     private final FilmService filmServiceService;
@@ -31,7 +30,7 @@ public class FilmController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<FilmResponse>> getByTitle(@RequestParam String title) {
+    public ResponseEntity<List<FilmResponse>> getByTitle(@RequestParam @NotBlank String title) {
         return ResponseEntity.ok(filmServiceService.getByTitle(title));
     }
 }

@@ -25,18 +25,4 @@ public class BaseMapper {
                 .build()
         ).collect(Collectors.toList());
     }
-
-    private static Map<String, Object> getProperties(Map<String, Object> result) {
-        return (Map<String, Object>) result.get("properties");
-    }
-
-    protected static List<Map<String, Object>> getPropertiesinResultList(Map<String, Object> jsonString) {
-        List<Map<String, Object>> results = (List<Map<String, Object>>) jsonString.get("result");
-        return results.stream().map(BaseMapper::getProperties).collect(Collectors.toList());
-    }
-
-    protected static Map<String, Object> getPropertiesInResult(Map<String, Object> jsonString) {
-        Map<String, Object> result = (Map<String, Object>) jsonString.get("result");
-        return getProperties(result);
-    }
 }

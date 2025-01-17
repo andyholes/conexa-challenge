@@ -4,17 +4,9 @@ import ai.conexa.challenge.model.response.VehicleResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class VehicleMapper extends BaseMapper{
-    public static List<VehicleResponse> mapToVehicleResponseList(Map<String, Object> jsonString) {
-        return getPropertiesinResultList(jsonString).stream().map(VehicleMapper::buildVehicleResponse).collect(Collectors.toList());
-    }
-
-    public static VehicleResponse mapToVehicleResponse(Map<String, Object> jsonString) {
-        return buildVehicleResponse(getPropertiesInResult(jsonString));
-    }
-    public static VehicleResponse buildVehicleResponse(Map<String, Object> input) {
+    public static VehicleResponse mapToVehicleResponse(Map<String, Object> input) {
         return VehicleResponse.builder()
                 .model((String) input.get("model"))
                 .vehicleClass((String) input.get("vehicle_class"))

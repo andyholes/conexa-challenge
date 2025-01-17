@@ -4,17 +4,9 @@ import ai.conexa.challenge.model.response.FilmResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class FilmMapper extends BaseMapper{
-    public static List<FilmResponse> mapToFilmResponseList(Map<String, Object> jsonString) {
-        return getPropertiesinResultList(jsonString).stream().map(FilmMapper::buildFilmResponse).collect(Collectors.toList());
-    }
-
-    public static FilmResponse mapToFilmResponse(Map<String, Object> jsonString) {
-        return buildFilmResponse(getPropertiesInResult(jsonString));
-    }
-    public static FilmResponse buildFilmResponse(Map<String, Object> input) {
+    public static FilmResponse mapToFilmResponse(Map<String, Object> input) {
         return FilmResponse.builder()
                 .characters((List<String>) input.get("characters"))
                 .planets((List<String>) input.get("planets"))

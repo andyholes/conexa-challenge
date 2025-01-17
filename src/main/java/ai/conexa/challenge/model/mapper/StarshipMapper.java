@@ -4,18 +4,9 @@ import ai.conexa.challenge.model.response.StarshipResponse;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class StarshipMapper extends BaseMapper{
-    public static List<StarshipResponse> mapToStarshipResponseList(Map<String, Object> jsonString) {
-        return getPropertiesinResultList(jsonString).stream().map(StarshipMapper::buildStarshipResponse).collect(Collectors.toList());
-    }
-
-    public static StarshipResponse mapToStarshipResponse(Map<String, Object> jsonString) {
-        return buildStarshipResponse(getPropertiesInResult(jsonString));
-    }
-    
-    public static StarshipResponse buildStarshipResponse(Map<String, Object> input) {
+    public static StarshipResponse mapToStarshipResponse(Map<String, Object> input) {
         return StarshipResponse.builder()
                 .model((String) input.get("model"))
                 .starshipClass((String) input.get("starship_class"))
