@@ -1,0 +1,17 @@
+#logging:
+#    level:
+#        org:
+#            springframework:
+#                web:
+#                    client:
+#                        RestTemplate: DEBUG
+#        springfox:
+#            documentation: DEBUG
+spring:
+    mvc:
+        pathmatch:
+            matching-strategy: ANT_PATH_MATCHER
+    config:
+        import: "classpath:/swapi-endpoints.yml"
+    web:
+        locale: en
