@@ -15,3 +15,7 @@ spring:
         import: "classpath:/swapi-endpoints.yml"
     web:
         locale: en
+
+jwt:
+    secret: ${JWT_SECRET:default-secret}
+    expiration: 600000
