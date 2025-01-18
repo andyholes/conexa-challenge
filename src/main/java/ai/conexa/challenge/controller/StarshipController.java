@@ -26,8 +26,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/starships")
 @RequiredArgsConstructor
-@Tag(name = "Starship Controller", description = "Includes endpoints to get starships by ID, search starships by name, and get a paginated list of starships.")
 @Validated
+@Tag(name = "Starship Controller", description = "Includes endpoints to get starships by ID, search starships by name, and get a paginated list of starships.")
 public class StarshipController {
     private final StarshipService starshipService;
 
@@ -54,7 +54,7 @@ public class StarshipController {
         return ResponseEntity.ok(starshipService.getById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/")
     @Operation(summary = "Search starships by name", description = "Search for starships in the database by their name. This allows filtering of starships based on a provided name.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved starships by name"),

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/vehicles")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "Vehicle Controller", description = "Includes endpoints to get vehicles by ID, search vehicles by name, and get a paginated list of vehicles.")
 public class VehicleController {
     private final VehicleService vehicleService;
@@ -52,7 +54,7 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.getById(id));
     }
 
-    @GetMapping("/search")
+    @GetMapping("/")
     @Operation(summary = "Search vehicles by name", description = "Search for vehicles in the database by their name. This allows filtering of vehicles based on a provided name.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved vehicles by name"),

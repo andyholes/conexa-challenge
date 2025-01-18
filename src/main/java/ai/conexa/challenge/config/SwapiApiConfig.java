@@ -7,6 +7,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * Configuration class for SWAPI API endpoints.
+ * This class holds the URLs for various SWAPI API endpoints and logs them upon initialization.
+ * The URLs are set in the swapi-endpoints.yaml file and can be modified via environment variables.
+ */
 @Component
 @Data
 @Slf4j
@@ -25,6 +30,10 @@ public class SwapiApiConfig {
     private String filmsById;
     private String filmsByTitle;
 
+    /**
+     * Logs the currently available SWAPI API URLs.
+     * This method is called after the properties are set for debugging purposes.
+     */
     @PostConstruct
     void logUrls() {
         log.info("Currently available Swapi API URLs:");
