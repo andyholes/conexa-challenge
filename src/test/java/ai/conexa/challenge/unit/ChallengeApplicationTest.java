@@ -4,12 +4,14 @@ import ai.conexa.challenge.ChallengeApplication;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 @SpringBootTest
 class ChallengeApplicationTest {
 
     @Test
-    public void testMain() {
+    void testMain() {
         String[] args = {"--server.port=8081"};
-        ChallengeApplication.main(args);
+        assertDoesNotThrow(() -> ChallengeApplication.main(args));
     }
 }
