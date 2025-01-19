@@ -1,6 +1,7 @@
 package ai.conexa.challenge.exception.handler;
 
 import ai.conexa.challenge.exception.InvalidCredentialsException;
+import ai.conexa.challenge.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.context.request.WebRequest;
@@ -19,19 +19,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
-import static ai.conexa.challenge.util.MessageConstants.RESOURCE_NOT_FOUND;
-import static ai.conexa.challenge.util.MessageConstants.SWAPI_FETCHING_ERROR;
-
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(NotFound.class)
-    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFound e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(RESOURCE_NOT_FOUND));
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<ErrorResponse> handleResourceAccessException(ResourceAccessException e) {
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ErrorResponse(SWAPI_FETCHING_ERROR));
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ErrorResponse(e.getMessage()));
     }
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<ErrorResponse> handleInvalidCredentialsException(InvalidCredentialsException e) {
@@ -45,11 +42,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        String returnType;
-        try {
+        String returnType = "unknown";
+        if (ex.getRequiredType() != null) {
             returnType = ex.getRequiredType().getSimpleName();
-        } catch (NullPointerException e) {
-            returnType = "unknown";
         }
         String message = String.format("'%s' is not a valid value for the field '%s'. Expected type: %s.",
                 ex.getValue(), ex.getName(), returnType);

@@ -1,6 +1,6 @@
 package ai.conexa.challenge.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,15 +12,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PeopleResponse {
     private String name;
+    @JsonProperty("birth_year")
     private String birthYear;
+    @JsonProperty("eye_color")
     private String eyeColor;
     private String gender;
+    @JsonProperty("hair_color")
     private String hairColor;
     private String height;
     private String mass;
+    @JsonProperty("skin_color")
     private String skinColor;
     private String homeworld;
     private List<String> films;

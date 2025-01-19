@@ -2,9 +2,9 @@ package ai.conexa.challenge.security.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 @AllArgsConstructor
 public class LoginResponse {
     @Schema(example = "Bearer eyJhbG...")

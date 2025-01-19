@@ -1,6 +1,7 @@
 package ai.conexa.challenge.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,8 @@ import javax.annotation.PostConstruct;
  * The URLs are set in the swapi-endpoints.yaml file and can be modified via environment variables.
  */
 @Component
-@Data
+@Getter
+@Setter
 @Slf4j
 @ConfigurationProperties(prefix = "swapi.endpoints")
 public class SwapiApiConfig {

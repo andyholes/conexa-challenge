@@ -28,32 +28,20 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public PaginatedResponse getAllPaginated(int page, int size) {
         String url = String.format(endpoints.getPeoplePaginated(), page, size);
-        log.info("Fetching paginated people data from URL: {}", url);
-        PaginatedResponse response = client.fetchObject(url, PaginatedResponse.class);
-        log.info("Fetched {} people data for page {}: {}", response.getResults().size(), page, response);
-        return response;
+        return client.fetchObject(url, PaginatedResponse.class);
     }
 
     @Override
     public PeopleResponse getById(Long id) {
         String url = String.format(endpoints.getPeopleById(), id);
-        log.info("Fetching person data by ID from URL: {}", url);
-        SingleResultResponse<PeopleResponse> response = client.fetchObject(url, new TypeReference<SingleResultResponse<PeopleResponse>>() {
-        });
-        log.info("Fetched person data by ID: {}", response.getResult());
-        return response.getResult().getProperties();
+        return client.fetchObject(url, new TypeReference<SingleResultResponse<PeopleResponse>>() {})
+                .getResult().getProperties();
     }
 
     @Override
     public List<PeopleResponse> getByName(String name) {
         String url = String.format(endpoints.getPeopleByName(), name);
-        log.info("Fetching people data by name from URL: {}", url);
-        MultipleResultResponse<PeopleResponse> response = client.fetchObject(url, new TypeReference<MultipleResultResponse<PeopleResponse>>() {
-        });
-        List<PeopleResponse> people = response.getResult().stream()
-                .map(Result::getProperties)
-                .collect(Collectors.toList());
-        log.info("Fetched {} people data by name: {}", people.size(), name);
-        return people;
+        return client.fetchObject(url, new TypeReference<MultipleResultResponse<PeopleResponse>>() {})
+                .getResult().stream().map(Result::getProperties).collect(Collectors.toList());
     }
 }

@@ -89,7 +89,7 @@ class PeopleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Leia Organa"))
-                .andExpect(jsonPath("$.birthYear").value("1234"));
+                .andExpect(jsonPath("$.birth_year").value("1234"));
     }
 
     @Test
@@ -106,7 +106,7 @@ class PeopleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Han Solo"))
-                .andExpect(jsonPath("$[0].birthYear").value("1234"));
+                .andExpect(jsonPath("$[0].birth_year").value("1234"));
     }
 
     @Test
