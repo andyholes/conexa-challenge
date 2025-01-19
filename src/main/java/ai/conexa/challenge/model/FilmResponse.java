@@ -1,5 +1,6 @@
-package ai.conexa.challenge.model.response;
+package ai.conexa.challenge.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -19,7 +20,9 @@ public class FilmResponse {
     private String title;
     private int episodeId;
     private String director;
+    @JsonProperty("release_date")
     private String releaseDate;
+    @JsonProperty("opening_crawl")
     private String openingCrawl;
     private String url;
 

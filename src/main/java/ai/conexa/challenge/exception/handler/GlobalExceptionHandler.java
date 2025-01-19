@@ -37,8 +37,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        String returnType;
+        try {
+            returnType = ex.getRequiredType().getSimpleName();
+        } catch (NullPointerException e) {
+            returnType = "unknown";
+        }
         String message = String.format("'%s' is not a valid value for the field '%s'. Expected type: %s.",
-                ex.getValue(), ex.getName(), ex.getRequiredType().getSimpleName());
+                ex.getValue(), ex.getName(), returnType);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(message));
     }
 

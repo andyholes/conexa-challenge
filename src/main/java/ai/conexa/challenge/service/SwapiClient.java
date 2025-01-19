@@ -1,35 +1,30 @@
 package ai.conexa.challenge.service;
 
-import ai.conexa.challenge.exception.ResourceNotFoundException;
-import org.springframework.web.client.RestClientException;
+import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.util.List;
-import java.util.Map;
-
+/**
+ * Interface for SWAPI client.
+ * This interface defines methods for fetching objects from the SWAPI API.
+ */
 public interface SwapiClient {
-    /**
-     * Fetches paginated data from the given URL.
-     *
-     * @param url the URL to fetch data from
-     * @return a map containing the paginated data
-     */
-    public Map<String, Object> fetchPaginatedData(String url);
 
     /**
-     * Fetches a list of results from the given URL.
+     * Fetches an object from the given URL using the specified response type.
      *
-     * @param url the URL to fetch data from
-     * @return a list of maps containing the results
+     * @param url          the URL to fetch the object from
+     * @param responseType the class type of the response
+     *                     (e.g., <b>PaginatedResponse.class, SingleResultResponse.class</b>)
+     * @return the fetched object of type T
      */
-    public List<Map<String, Object>> fetchResults(String url);
+    <T> T fetchObject(String url, Class<T> responseType);
 
     /**
-     * Fetches a single result from the given URL.
+     * Fetches an object from the given URL using the specified TypeReference.
      *
-     * @param url the URL to fetch data from
-     * @return a map containing the single result
-     * @throws ResourceNotFoundException if the resource is not found
-     * @throws RestClientException       if there is an error fetching the data
+     * @param url           the URL to fetch the object from
+     * @param typeReference the TypeReference for the response
+     *                      (e.g., <b>new TypeReference&lt;SingleResultResponse&lt;PeopleResponse&gt;&gt;() {}</b>)
+     * @return the fetched object of type T
      */
-    public Map<String, Object> fetchSingleResult(String url);
+    <T> T fetchObject(String url, TypeReference<T> typeReference);
 }

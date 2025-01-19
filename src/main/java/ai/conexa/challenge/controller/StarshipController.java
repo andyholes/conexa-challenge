@@ -1,8 +1,8 @@
 package ai.conexa.challenge.controller;
 
 import ai.conexa.challenge.exception.handler.ErrorResponse;
-import ai.conexa.challenge.model.response.PaginatedResponse;
-import ai.conexa.challenge.model.response.StarshipResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
+import ai.conexa.challenge.model.StarshipResponse;
 import ai.conexa.challenge.service.StarshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

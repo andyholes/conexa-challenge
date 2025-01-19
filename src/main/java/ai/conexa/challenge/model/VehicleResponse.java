@@ -1,4 +1,4 @@
-package ai.conexa.challenge.model.response;
+package ai.conexa.challenge.model;
 
 import lombok.Builder;
 import lombok.Data;

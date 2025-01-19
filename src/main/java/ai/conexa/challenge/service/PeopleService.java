@@ -1,7 +1,7 @@
 package ai.conexa.challenge.service;
 
-import ai.conexa.challenge.model.response.PaginatedResponse;
-import ai.conexa.challenge.model.response.PeopleResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
+import ai.conexa.challenge.model.PeopleResponse;
 
 import java.util.List;
 

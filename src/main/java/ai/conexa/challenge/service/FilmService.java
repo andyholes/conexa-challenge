@@ -1,6 +1,6 @@
 package ai.conexa.challenge.service;
 
-import ai.conexa.challenge.model.response.FilmResponse;
+import ai.conexa.challenge.model.FilmResponse;
 
 import java.util.List;
 
