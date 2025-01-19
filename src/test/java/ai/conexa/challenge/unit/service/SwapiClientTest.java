@@ -1,10 +1,10 @@
 package ai.conexa.challenge.unit.service;
 
+import ai.conexa.challenge.exception.ResourceNotFoundException;
 import ai.conexa.challenge.model.PeopleResponse;
 import ai.conexa.challenge.model.generic.MultipleResultResponse;
 import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.generic.Result;
-import ai.conexa.challenge.service.SwapiClient;
 import ai.conexa.challenge.service.impl.SwapiClientImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
@@ -25,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -115,11 +115,7 @@ class SwapiClientTest {
 
     @Test
     void testFetchObject_shouldThrowInternalError_whenJsonProcessingExceptionOccurs() throws JsonProcessingException {
-        TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {
-                };
-
-        RestTemplate restTemplate = mock(RestTemplate.class);
-        ObjectMapper objectMapper = mock(ObjectMapper.class);
+        TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {};
 
         when(restTemplate.getForEntity(URL, String.class))
                 .thenReturn(ResponseEntity.ok("{\"message\": \"ok\", \"result\": []}"));
@@ -127,13 +123,25 @@ class SwapiClientTest {
         when(objectMapper.readValue(anyString(), eq(typeReference)))
                 .thenThrow(JsonProcessingException.class);
 
-        SwapiClient swapiClient = new SwapiClientImpl(restTemplate, objectMapper);
-
         assertThrows(InternalError.class, () -> {
             swapiClient.fetchObject(URL, typeReference);
         });
 
         verify(restTemplate, times(1)).getForEntity(URL, String.class);
         verify(objectMapper, times(1)).readValue(anyString(), eq(typeReference));
+    }
+
+    @Test
+    void testFetchObject_shouldThrowResourceAccessException() throws JsonProcessingException {
+        TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {};
+
+        when(restTemplate.getForEntity(URL, String.class)).thenThrow(new ResourceNotFoundException());
+
+        assertThrows(ResourceAccessException.class, () -> {
+            swapiClient.fetchObject(URL, typeReference);
+        });
+
+        verify(restTemplate, times(1)).getForEntity(URL, String.class);
+        verify(objectMapper, times(0)).readValue(anyString(), eq(typeReference));
     }
 }
