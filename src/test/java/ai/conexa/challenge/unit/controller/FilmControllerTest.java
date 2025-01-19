@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false, printOnlyOnFailure = false)
 class FilmControllerTest {
 
     @Autowired
@@ -48,8 +48,7 @@ class FilmControllerTest {
 
         when(filmService.getAll()).thenReturn(films);
 
-        mockMvc.perform(get("/films")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/films"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
@@ -68,8 +67,7 @@ class FilmControllerTest {
 
         when(filmService.getById(anyLong())).thenReturn(film);
 
-        mockMvc.perform(get("/films/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/films/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Return of the Jedi"))
                 .andExpect(jsonPath("$.director").value("Richard Marquand"));
@@ -84,8 +82,7 @@ class FilmControllerTest {
 
         when(filmService.getByTitle(anyString())).thenReturn(Collections.singletonList(film));
 
-        mockMvc.perform(get("/films/?title=The Force Awakens")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/films/?title=The Force Awakens"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].title").value("The Force Awakens"))
@@ -96,8 +93,7 @@ class FilmControllerTest {
     void getFilmsByTitle_filmDontExists() throws Exception {
         when(filmService.getByTitle(anyString())).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/films/?title=The Last Jedi")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/films/?title=The Last Jedi"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -105,8 +101,7 @@ class FilmControllerTest {
     @Test
     void testGetByTitle_titleIsNull_shouldThrowBadRequest() throws Exception {
 
-        mockMvc.perform(get("/films/?title=")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/films/?title="))
                 .andExpect(status().isBadRequest());
     }
 }

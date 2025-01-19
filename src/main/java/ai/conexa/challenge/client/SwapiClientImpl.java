@@ -1,7 +1,7 @@
-package ai.conexa.challenge.service.impl;
+package ai.conexa.challenge.client;
 
+import ai.conexa.challenge.exception.JsonParsingException;
 import ai.conexa.challenge.exception.ResourceNotFoundException;
-import ai.conexa.challenge.service.SwapiClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException.NotFound;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
-import static ai.conexa.challenge.util.MessageConstants.JSON_PARSE_ERROR;
 import static ai.conexa.challenge.util.MessageConstants.SWAPI_FETCHING_ERROR;
 
 @Component
@@ -33,12 +32,12 @@ public class SwapiClientImpl implements SwapiClient {
         try{
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
             return objectMapper.readValue(response.getBody(), typeReference);
-        } catch (NotFound e){
-            throw new ResourceNotFoundException();
+        } catch (HttpClientErrorException e){
+            if (e.getRawStatusCode() == 404){
+                throw new ResourceNotFoundException();
+            } else throw new ResourceAccessException(SWAPI_FETCHING_ERROR);
         } catch (JsonProcessingException e) {
-            throw new InternalError(JSON_PARSE_ERROR);
-        } catch (Exception e) {
-            throw new ResourceAccessException(SWAPI_FETCHING_ERROR);
+            throw new JsonParsingException();
         }
     }
 }

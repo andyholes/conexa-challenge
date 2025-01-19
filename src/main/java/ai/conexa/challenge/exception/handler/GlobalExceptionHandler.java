@@ -1,6 +1,7 @@
 package ai.conexa.challenge.exception.handler;
 
 import ai.conexa.challenge.exception.InvalidCredentialsException;
+import ai.conexa.challenge.exception.JsonParsingException;
 import ai.conexa.challenge.exception.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(JsonParsingException.class)
+    public ResponseEntity<ErrorResponse> handleJsonParsingException(JsonParsingException e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(e.getMessage()));
+    }
     @ExceptionHandler(ResourceAccessException.class)
     public ResponseEntity<ErrorResponse> handleResourceAccessException(ResourceAccessException e) {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ErrorResponse(e.getMessage()));

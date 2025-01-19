@@ -1,11 +1,12 @@
-package ai.conexa.challenge.unit.service;
+package ai.conexa.challenge.unit.client;
 
+import ai.conexa.challenge.exception.JsonParsingException;
 import ai.conexa.challenge.exception.ResourceNotFoundException;
 import ai.conexa.challenge.model.PeopleResponse;
 import ai.conexa.challenge.model.generic.MultipleResultResponse;
 import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.generic.Result;
-import ai.conexa.challenge.service.impl.SwapiClientImpl;
+import ai.conexa.challenge.client.SwapiClientImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,7 +15,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
@@ -114,34 +117,40 @@ class SwapiClientTest {
     }
 
     @Test
-    void testFetchObject_shouldThrowInternalError_whenJsonProcessingExceptionOccurs() throws JsonProcessingException {
+    void testFetchObject_shouldReturnResourceNotFoundException() throws JsonProcessingException {
         TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {};
 
         when(restTemplate.getForEntity(URL, String.class))
-                .thenReturn(ResponseEntity.ok("{\"message\": \"ok\", \"result\": []}"));
+                .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
-        when(objectMapper.readValue(anyString(), eq(typeReference)))
-                .thenThrow(JsonProcessingException.class);
-
-        assertThrows(InternalError.class, () -> {
-            swapiClient.fetchObject(URL, typeReference);
-        });
-
+        assertThrows(ResourceNotFoundException.class, () -> {swapiClient.fetchObject(URL, typeReference);});
         verify(restTemplate, times(1)).getForEntity(URL, String.class);
-        verify(objectMapper, times(1)).readValue(anyString(), eq(typeReference));
     }
 
     @Test
     void testFetchObject_shouldThrowResourceAccessException() throws JsonProcessingException {
         TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {};
 
-        when(restTemplate.getForEntity(URL, String.class)).thenThrow(new ResourceNotFoundException());
+        when(restTemplate.getForEntity(URL, String.class))
+                .thenThrow(new HttpClientErrorException(HttpStatus.INTERNAL_SERVER_ERROR));
 
-        assertThrows(ResourceAccessException.class, () -> {
-            swapiClient.fetchObject(URL, typeReference);
-        });
-
+        assertThrows(ResourceAccessException.class, () -> {swapiClient.fetchObject(URL, typeReference);});
         verify(restTemplate, times(1)).getForEntity(URL, String.class);
-        verify(objectMapper, times(0)).readValue(anyString(), eq(typeReference));
+    }
+
+    @Test
+    void testFetchObject_shouldThrowJsonParsingException() throws JsonProcessingException {
+        TypeReference<MultipleResultResponse<PeopleResponse>> typeReference = new TypeReference<MultipleResultResponse<PeopleResponse>>() {};
+
+        String mockedResponse = "mocked_response";
+        when(restTemplate.getForEntity(URL, String.class))
+                .thenReturn(ResponseEntity.ok(mockedResponse));
+
+        when(objectMapper.readValue(anyString(), eq(typeReference)))
+                .thenThrow(JsonProcessingException.class);
+
+        assertThrows(JsonParsingException.class, () -> {swapiClient.fetchObject(URL, typeReference);});
+        verify(restTemplate, times(1)).getForEntity(URL, String.class);
+        verify(objectMapper, times(1)).readValue(mockedResponse, typeReference);
     }
 }

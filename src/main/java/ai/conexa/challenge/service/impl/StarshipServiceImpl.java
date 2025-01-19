@@ -7,7 +7,7 @@ import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.generic.Result;
 import ai.conexa.challenge.model.generic.SingleResultResponse;
 import ai.conexa.challenge.service.StarshipService;
-import ai.conexa.challenge.service.SwapiClient;
+import ai.conexa.challenge.client.SwapiClient;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

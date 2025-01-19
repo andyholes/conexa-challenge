@@ -1,4 +1,4 @@
-package ai.conexa.challenge.service;
+package ai.conexa.challenge.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 

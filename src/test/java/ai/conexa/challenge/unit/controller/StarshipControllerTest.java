@@ -1,15 +1,14 @@
 package ai.conexa.challenge.unit.controller;
 
+import ai.conexa.challenge.model.StarshipResponse;
 import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.generic.PaginatedResult;
-import ai.conexa.challenge.model.StarshipResponse;
 import ai.conexa.challenge.service.StarshipService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false, printOnlyOnFailure = false)
 class StarshipControllerTest {
 
     @Autowired
@@ -51,8 +50,7 @@ class StarshipControllerTest {
 
         when(starshipService.getAllPaginated(1, 2)).thenReturn(paginatedResponse);
 
-        mockMvc.perform(get("/starships?page=1&size=2")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships?page=1&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.results", hasSize(2)))
                 .andExpect(jsonPath("$.results[0].uid", is("1")))
@@ -64,16 +62,14 @@ class StarshipControllerTest {
     @Test
     void testGetAllPaginated_PageIsZero_shouldReturnBadRequest() throws Exception {
 
-        mockMvc.perform(get("/starships?page=0&size=2")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships?page=0&size=2"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
 
-        mockMvc.perform(get("/starships?page=1&size=0")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships?page=1&size=0"))
                 .andExpect(status().isBadRequest());
     }
 
@@ -87,8 +83,7 @@ class StarshipControllerTest {
 
         when(starshipService.getById(anyLong())).thenReturn(starship);
 
-        mockMvc.perform(get("/starships/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Slave 1"))
                 .andExpect(jsonPath("$.model").value("Firespray-31-class patrol and attack"))
@@ -105,8 +100,7 @@ class StarshipControllerTest {
 
         when(starshipService.getByName(anyString())).thenReturn(Collections.singletonList(starship));
 
-        mockMvc.perform(get("/starships/?name=TIE Fighter")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships/?name=TIE Fighter"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("TIE Fighter"))
@@ -118,8 +112,7 @@ class StarshipControllerTest {
     void testGetByName_noResults() throws Exception {
         when(starshipService.getByName(anyString())).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/starships/?name=Death Star")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships/?name=Death Star"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -127,8 +120,7 @@ class StarshipControllerTest {
     @Test
     void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
 
-        mockMvc.perform(get("/starships/?name=")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/starships/?name="))
                 .andExpect(status().isBadRequest());
     }
 }

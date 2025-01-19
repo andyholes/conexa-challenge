@@ -5,7 +5,7 @@ import ai.conexa.challenge.model.FilmResponse;
 import ai.conexa.challenge.model.generic.MultipleResultResponse;
 import ai.conexa.challenge.model.generic.Result;
 import ai.conexa.challenge.model.generic.SingleResultResponse;
-import ai.conexa.challenge.service.SwapiClient;
+import ai.conexa.challenge.client.SwapiClient;
 import ai.conexa.challenge.service.impl.FilmServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.jupiter.api.Test;

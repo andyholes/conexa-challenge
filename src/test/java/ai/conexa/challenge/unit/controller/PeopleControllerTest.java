@@ -1,7 +1,7 @@
 package ai.conexa.challenge.unit.controller;
 
-import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.PeopleResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
 import ai.conexa.challenge.model.generic.PaginatedResult;
 import ai.conexa.challenge.service.PeopleService;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false, printOnlyOnFailure = false)
 class PeopleControllerTest {
 
     @Autowired
@@ -51,8 +50,7 @@ class PeopleControllerTest {
 
         when(peopleService.getAllPaginated(1, 2)).thenReturn(paginatedResponse);
 
-        mockMvc.perform(get("/people?page=1&size=2")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people?page=1&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.results", hasSize(2)))
                 .andExpect(jsonPath("$.results[0].uid", is("1")))
@@ -64,16 +62,14 @@ class PeopleControllerTest {
     @Test
     void testGetAllPaginated_PageIsZero_shouldReturnBadRequest() throws Exception {
 
-        mockMvc.perform(get("/people?page=0&size=2")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people?page=0&size=2"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
 
-        mockMvc.perform(get("/people?page=1&size=0")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people?page=1&size=0"))
                 .andExpect(status().isBadRequest());
     }
     @Test
@@ -85,8 +81,7 @@ class PeopleControllerTest {
 
         when(peopleService.getById(anyLong())).thenReturn(person);
 
-        mockMvc.perform(get("/people/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Leia Organa"))
                 .andExpect(jsonPath("$.birth_year").value("1234"));
@@ -101,8 +96,7 @@ class PeopleControllerTest {
 
         when(peopleService.getByName(anyString())).thenReturn(Collections.singletonList(person));
 
-        mockMvc.perform(get("/people/?name=Han")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people/?name=Han"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name").value("Han Solo"))
@@ -113,8 +107,7 @@ class PeopleControllerTest {
     void testGetByName_noResults() throws Exception {
         when(peopleService.getByName(anyString())).thenReturn(Collections.emptyList());
 
-        mockMvc.perform(get("/people/?name=Chewbacca")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people/?name=Chewbacca"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
     }
@@ -122,8 +115,7 @@ class PeopleControllerTest {
     @Test
     void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
 
-        mockMvc.perform(get("/people/?name=")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/people/?name="))
                 .andExpect(status().isBadRequest());
     }
 }

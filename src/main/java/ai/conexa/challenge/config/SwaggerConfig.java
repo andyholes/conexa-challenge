@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Configuration
 public class SwaggerConfig {
 
@@ -29,7 +31,7 @@ public class SwaggerConfig {
                         .addSecuritySchemes("JWT", new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .name("Authorization")
+                                .name(AUTHORIZATION)
                         )
                 );
     }
