@@ -35,7 +35,8 @@ public class FilmController {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved list of films"),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized access", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "503", description = "Service unavailable", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<List<FilmResponse>> getAll() {
         return ResponseEntity.ok(filmServiceService.getAll());
@@ -46,7 +47,8 @@ public class FilmController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the film"),
             @ApiResponse(responseCode = "404", description = "Film not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "503", description = "Service unavailable", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<FilmResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(filmServiceService.getById(id));
@@ -57,7 +59,8 @@ public class FilmController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved films by title"),
             @ApiResponse(responseCode = "400", description = "Bad request, title parameter is required", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "503", description = "Service unavailable", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<List<FilmResponse>> getByTitle(@RequestParam @NotBlank String title) {
         return ResponseEntity.ok(filmServiceService.getByTitle(title));
