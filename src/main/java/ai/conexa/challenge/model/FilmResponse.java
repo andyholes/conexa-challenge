@@ -22,6 +22,7 @@ public class FilmResponse {
     private String edited;
     private String producer;
     private String title;
+    @JsonProperty("episode_id")
     private int episodeId;
     private String director;
     @JsonProperty("release_date")
