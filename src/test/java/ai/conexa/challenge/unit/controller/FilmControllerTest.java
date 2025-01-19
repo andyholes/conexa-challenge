@@ -1,6 +1,6 @@
-package ai.conexa.challenge.controller;
+package ai.conexa.challenge.unit.controller;
 
-import ai.conexa.challenge.model.response.FilmResponse;
+import ai.conexa.challenge.model.FilmResponse;
 import ai.conexa.challenge.service.FilmService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +35,7 @@ class FilmControllerTest {
     private FilmService filmService;
 
     @Test
-    public void testGetFilms() throws Exception {
+    void testGetFilms() throws Exception {
         FilmResponse film1 = FilmResponse.builder()
                 .title("A New Hope")
                 .director("George Lucas")
@@ -60,7 +60,7 @@ class FilmControllerTest {
     }
 
     @Test
-    public void getFilmsById() throws Exception {
+    void getFilmsById() throws Exception {
         FilmResponse film = FilmResponse.builder()
                 .title("Return of the Jedi")
                 .director("Richard Marquand")
@@ -103,7 +103,7 @@ class FilmControllerTest {
     }
 
     @Test
-    public void testGetByTitle_titleIsNull_shouldThrowBadRequest() throws Exception {
+    void testGetByTitle_titleIsNull_shouldThrowBadRequest() throws Exception {
 
         mockMvc.perform(get("/films/?title=")
                         .contentType(MediaType.APPLICATION_JSON))

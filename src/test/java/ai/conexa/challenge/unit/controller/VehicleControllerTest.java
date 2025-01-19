@@ -1,8 +1,8 @@
-package ai.conexa.challenge.controller;
+package ai.conexa.challenge.unit.controller;
 
-import ai.conexa.challenge.model.response.PaginatedResponse;
-import ai.conexa.challenge.model.response.Result;
-import ai.conexa.challenge.model.response.VehicleResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
+import ai.conexa.challenge.model.generic.PaginatedResult;
+import ai.conexa.challenge.model.VehicleResponse;
 import ai.conexa.challenge.service.VehicleService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +36,18 @@ class VehicleControllerTest {
     private VehicleService vehicleService;
 
     @Test
-    public void testGetAllPaginated() throws Exception {
-        Result result1 = Result.builder()
+    void testGetAllPaginated() throws Exception {
+        PaginatedResult paginatedResult1 = PaginatedResult.builder()
                 .uid("1")
                 .name("Speeder Bike")
                 .build();
-        Result result2 = Result.builder()
+        PaginatedResult paginatedResult2 = PaginatedResult.builder()
                 .uid("2")
                 .name("TIE Fighter")
                 .build();
 
-        List<Result> results = Arrays.asList(result1, result2);
-        PaginatedResponse paginatedResponse = PaginatedResponse.builder().totalPages(1).totalRecords(2).results(results).build();
+        List<PaginatedResult> paginatedResults = Arrays.asList(paginatedResult1, paginatedResult2);
+        PaginatedResponse paginatedResponse = PaginatedResponse.builder().totalPages(1).totalRecords(2).results(paginatedResults).build();
 
         when(vehicleService.getAllPaginated(1, 2)).thenReturn(paginatedResponse);
 
@@ -62,7 +62,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetAllPaginated_Page_IsZero_shouldReturnBadRequest() throws Exception {
+    void testGetAllPaginated_Page_IsZero_shouldReturnBadRequest() throws Exception {
 
         mockMvc.perform(get("/vehicles?page=0&size=2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
+    void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
 
         mockMvc.perform(get("/vehicles?page=1&size=0")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +78,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetById() throws Exception {
+    void testGetById() throws Exception {
         VehicleResponse vehicle = VehicleResponse.builder()
                 .name("X-Wing")
                 .model("T-65 X-wing starfighter")
@@ -96,7 +96,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetByName() throws Exception {
+    void testGetByName() throws Exception {
         VehicleResponse vehicle = VehicleResponse.builder()
                 .name("AT-AT")
                 .model("All Terrain Armored Transport")
@@ -115,7 +115,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetByName_noResults() throws Exception {
+    void testGetByName_noResults() throws Exception {
         when(vehicleService.getByName(anyString())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/vehicles/?name=Millennium Falcon")
@@ -125,7 +125,7 @@ class VehicleControllerTest {
     }
 
     @Test
-    public void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
+    void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
 
         mockMvc.perform(get("/vehicles/?name=")
                         .contentType(MediaType.APPLICATION_JSON))

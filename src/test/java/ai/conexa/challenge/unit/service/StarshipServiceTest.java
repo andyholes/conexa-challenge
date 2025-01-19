@@ -1,8 +1,9 @@
-package ai.conexa.challenge.service;
+package ai.conexa.challenge.unit.service;
 
 import ai.conexa.challenge.controller.StarshipController;
-import ai.conexa.challenge.model.response.PaginatedResponse;
-import ai.conexa.challenge.model.response.StarshipResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
+import ai.conexa.challenge.model.StarshipResponse;
+import ai.conexa.challenge.service.StarshipService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

@@ -1,8 +1,8 @@
-package ai.conexa.challenge.controller;
+package ai.conexa.challenge.unit.controller;
 
-import ai.conexa.challenge.model.response.PaginatedResponse;
-import ai.conexa.challenge.model.response.Result;
-import ai.conexa.challenge.model.response.StarshipResponse;
+import ai.conexa.challenge.model.generic.PaginatedResponse;
+import ai.conexa.challenge.model.generic.PaginatedResult;
+import ai.conexa.challenge.model.StarshipResponse;
 import ai.conexa.challenge.service.StarshipService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,18 +36,18 @@ class StarshipControllerTest {
     private StarshipService starshipService;
 
     @Test
-    public void testGetAllPaginated() throws Exception {
-        Result result1 = Result.builder()
+    void testGetAllPaginated() throws Exception {
+        PaginatedResult paginatedResult1 = PaginatedResult.builder()
                 .uid("1")
                 .name("Millennium Falcon")
                 .build();
-        Result result2 = Result.builder()
+        PaginatedResult paginatedResult2 = PaginatedResult.builder()
                 .uid("2")
                 .name("X-Wing Starfighter")
                 .build();
 
-        List<Result> results = Arrays.asList(result1, result2);
-        PaginatedResponse paginatedResponse = PaginatedResponse.builder().totalPages(1).totalRecords(2).results(results).build();
+        List<PaginatedResult> paginatedResults = Arrays.asList(paginatedResult1, paginatedResult2);
+        PaginatedResponse paginatedResponse = PaginatedResponse.builder().totalPages(1).totalRecords(2).results(paginatedResults).build();
 
         when(starshipService.getAllPaginated(1, 2)).thenReturn(paginatedResponse);
 
@@ -62,7 +62,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetAllPaginated_PageIsZero_shouldReturnBadRequest() throws Exception {
+    void testGetAllPaginated_PageIsZero_shouldReturnBadRequest() throws Exception {
 
         mockMvc.perform(get("/starships?page=0&size=2")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
+    void testGetAllPaginated_SizeIsZero_shouldReturnBadRequest() throws Exception {
 
         mockMvc.perform(get("/starships?page=1&size=0")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -78,7 +78,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetById() throws Exception {
+    void testGetById() throws Exception {
         StarshipResponse starship = StarshipResponse.builder()
                 .name("Slave 1")
                 .model("Firespray-31-class patrol and attack")
@@ -96,7 +96,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetByName() throws Exception {
+    void testGetByName() throws Exception {
         StarshipResponse starship = StarshipResponse.builder()
                 .name("TIE Fighter")
                 .model("TIE/ln starfighter")
@@ -115,7 +115,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetByName_noResults() throws Exception {
+    void testGetByName_noResults() throws Exception {
         when(starshipService.getByName(anyString())).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/starships/?name=Death Star")
@@ -125,7 +125,7 @@ class StarshipControllerTest {
     }
 
     @Test
-    public void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
+    void testGetByName_nameIsNull_shouldThrowBadRequest() throws Exception {
 
         mockMvc.perform(get("/starships/?name=")
                         .contentType(MediaType.APPLICATION_JSON))

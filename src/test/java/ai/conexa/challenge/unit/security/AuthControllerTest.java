@@ -1,5 +1,6 @@
-package ai.conexa.challenge.security;
+package ai.conexa.challenge.unit.security;
 
+import ai.conexa.challenge.security.JwtUtils;
 import ai.conexa.challenge.security.dto.LoginRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ class AuthControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    public void testLogin_Success() throws Exception {
+    void testLogin_Success() throws Exception {
         LoginRequest loginRequest = new LoginRequest("admin", "1234");
 
         when(jwtUtils.generateToken("admin")).thenReturn("test-token");
@@ -42,7 +43,7 @@ class AuthControllerTest {
     }
 
     @Test
-    public void testLogin_InvalidCredentials() throws Exception {
+    void testLogin_InvalidCredentials() throws Exception {
         LoginRequest loginRequest = new LoginRequest("admin", "wrong-password");
 
         mockMvc.perform(post("/login")
@@ -53,7 +54,7 @@ class AuthControllerTest {
     }
 
     @Test
-    public void testLogin_BadRequest() throws Exception {
+    void testLogin_BadRequest() throws Exception {
         LoginRequest loginRequest = new LoginRequest("", "");
 
         mockMvc.perform(post("/login")
@@ -63,7 +64,7 @@ class AuthControllerTest {
     }
 
     @Test
-    public void testLogin_InternalServerError() throws Exception {
+    void testLogin_InternalServerError() throws Exception {
         LoginRequest loginRequest = new LoginRequest("admin", "1234");
         when(jwtUtils.generateToken("admin")).thenThrow(new RuntimeException("Internal error"));
 
