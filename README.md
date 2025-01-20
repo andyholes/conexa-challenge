@@ -15,11 +15,16 @@
 
 ## Descripción
 
-De acuerdo con lo solicitado, se ha desarrollado una API REST utilizando Spring Boot y Java 8 que permite consumir la
-[API de Star Wars](https://www.swapi.tech/documentation) y obtener información sobre personas, películas, naves espaciales y vehículos, de manera paginada o
-filtrando por nombre o ID.<br>
+Esta se ha desarrollado una API REST utilizando Spring Boot y Java 8 que permite consumir la
+[API de Star Wars](https://www.swapi.tech/documentation) y obtener información sobre personas, películas, naves espaciales
+y vehículos, de manera paginada o
+filtrando por nombre o ID. <br>
+Se incluyeron pruebas para garantizar el correcto funcionamiento de las funcionalidades clave y
+la integración con la API externa.
+<br>
 La aplicación también cuenta con un sistema de autenticación basado en JWT, que permite a los usuarios obtener un token
-para acceder a los endpoints de la aplicación. Por motivo de simplicidad, no existe un sistema de registro de usuarios y no se almacenan credenciales en una base de datos, sino que se utilizan credenciales precargadas en el código.
+para autenticarse y acceder a los endpoints de la aplicación. Por motivo de simplicidad, no existe un sistema de registro
+de usuarios y no se almacenan credenciales en una base de datos, sino que se utilizan credenciales precargadas en el código.
 ```json
 {
   "username": "admin",
@@ -27,7 +32,7 @@ para acceder a los endpoints de la aplicación. Por motivo de simplicidad, no ex
 }
 ```
 
-Estos detalles y más acerca del funcionamiento de cada endpoint pueden ser consultados en la documentacion de Swagger
+Estos detalles y más acerca del funcionamiento de cada funcionalidad pueden ser consultados en la documentación de Swagger.
 
 ## Prerrequisitos
 
@@ -84,10 +89,11 @@ La aplicación cuenta con las siguientes variables de entorno configurables:
 
 ## Manejo de token en Swagger
 
-Para mayor comodidad a la hora de probar la aplicacion, se configuro Swagger para que luego de autenticarse, el token se pueda enviar en el header de las peticiones de manera sencilla. Para ello, se debe seguir los siguientes pasos:
-1. Ingresar a la URL de Swagger: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) para el ambiente local o [https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html](https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html) para la version desplegada.
+Para mayor comodidad a la hora de probar la aplicación, se configuró Swagger para que luego de autenticarse, el token se pueda enviar en el header de las peticiones de manera sencilla. Para ello, se debe seguir los siguientes pasos:
+1. Ingresar a la [URL de Swagger desplegada](https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html) o si
+   se está trabajando en el ambiente local a [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html).
 2. Una vez dentro nos dirigimos al [endpoint de autenticacion](https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html#/Authorization%20Controller/login)  y hacemos click en el boton "Try it out".
-3. Dado que las credenciales de usuario valida vienen precargadas, haremos click en "Execute" y obtendremos un token de autenticacion como el siguiente:
+3. Dado que las credenciales de usuario válidas vienen precargadas, haremos click en "Execute" y obtendremos un token de autenticación como el siguiente:
 ```json
 {
   "token": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczNzM0NTA5MSwiZXhwIjoxNzM3MzQ1NjkxfQ.UkHBI-30TO3AHeDt2oi0LG3wuaEbWic1XII1pkep_yE"
@@ -102,4 +108,5 @@ Para mayor comodidad a la hora de probar la aplicacion, se configuro Swagger par
 
 ## Despliegue
 
-La aplicacion se encuentra desplegada de manera gratuita en la plataforma Koyeb y se puede acceder a ella a traves de la siguiente URL: [https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html](https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html)
+La aplicación se encuentra desplegada de manera gratuita en la plataforma Koyeb y se puede acceder a ella a traves
+de la siguiente URL: [https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html](https://glad-gael-andyholes-054436ef.koyeb.app/swagger-ui/index.html)
