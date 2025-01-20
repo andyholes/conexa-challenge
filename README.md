@@ -15,7 +15,7 @@
 
 ## Descripción
 
-Esta se ha desarrollado una API REST utilizando Spring Boot y Java 8 que permite consumir la
+Esta aplicacion se ha desarrollado utilizando Spring Boot y Java 8 y esta diseñada para consumir la
 [API de Star Wars](https://www.swapi.tech/documentation) y obtener información sobre personas, películas, naves espaciales
 y vehículos, de manera paginada o
 filtrando por nombre o ID. <br>
