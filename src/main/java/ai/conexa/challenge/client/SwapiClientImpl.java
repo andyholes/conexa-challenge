@@ -34,9 +34,14 @@ public class SwapiClientImpl implements SwapiClient {
             return objectMapper.readValue(response.getBody(), typeReference);
         } catch (HttpClientErrorException e){
             if (e.getRawStatusCode() == 404){
+                log.info("Resource not found. URL: {}", url);
                 throw new ResourceNotFoundException();
-            } else throw new ResourceAccessException(SWAPI_FETCHING_ERROR);
+            } else {
+                log.info("Error fetching from SWAPI. URL: {}", url);
+                throw new ResourceAccessException(SWAPI_FETCHING_ERROR);
+            }
         } catch (JsonProcessingException e) {
+            log.error("Error parsing JSON response. URL: {}", url);
             throw new JsonParsingException();
         }
     }

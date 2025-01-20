@@ -7,15 +7,18 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
 import java.util.Collections;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Configuration
+@Slf4j
 public class SwaggerConfig {
     @Value("${deployment.url}")
     private String deploymentUrl;
@@ -41,5 +44,10 @@ public class SwaggerConfig {
                         )
                 )
                 .servers(Collections.singletonList(new Server().url(deploymentUrl)));
+    }
+
+    @PostConstruct
+    public void init() {
+        log.info("Swagger ready to access at: " + deploymentUrl + "/swagger-ui/index.html");
     }
 }
