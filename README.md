@@ -1,6 +1,6 @@
 # CONEXA CHALLENGE
 
-![img_2.png](img_2.png)
+![img_2.png](src/main/resources/static/img_2.png)
 
 
 ## Tabla de Contenidos
@@ -100,9 +100,9 @@ Para mayor comodidad a la hora de probar la aplicación, se configuró Swagger p
 }
 ```
 4. Copiamos el contenido del token (sin las comillas) y nos dirigimos al boton Authorize que se encuentra en la parte superior derecha de la pantalla.<br>
-![img.png](img.png)
+![img.png](src/main/resources/static/img.png)
 5. En el campo "Value" pegamos el token y hacemos click en "Authorize".<br>
-![img_1.png](img_1.png)
+![img_1.png](src/main/resources/static/img_1.png)
 6. Listo! Ahora podremos hacer uso de los endpoints de la aplicacion sin tener que preocuparnos por el token ya que este se incluira automaticamente en los headers de las peticiones. Recordar que, a menos que se haya modificado, el token tiene una duracion de 10 minutos.
 
 
