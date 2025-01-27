@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class UserRequest {
     @NotBlank
     @Schema(example = "admin")
     private String username;
