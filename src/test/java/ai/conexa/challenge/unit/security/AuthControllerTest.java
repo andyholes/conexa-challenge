@@ -10,6 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static ai.conexa.challenge.security.user.RolesEnum.ROLE_ADMIN;
 import static ai.conexa.challenge.util.MessageConstants.INVALID_CREDENTIALS;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -33,7 +37,7 @@ class AuthControllerTest {
     @Test
     void testLogin_Success() throws Exception {
         UserRequest userRequest = new UserRequest("admin", "1234");
-        when(jwtUtils.generateToken("admin")).thenReturn("test-token");
+        when(jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))).thenReturn("test-token");
 
         mockMvc.perform(post("/login")
                 .contentType(APPLICATION_JSON_VALUE)
@@ -66,7 +70,7 @@ class AuthControllerTest {
     @Test
     void testLogin_InternalServerError() throws Exception {
         UserRequest userRequest = new UserRequest("admin", "1234");
-        when(jwtUtils.generateToken("admin")).thenThrow(new RuntimeException("Internal error"));
+        when(jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))).thenThrow(new RuntimeException("Internal error"));
 
         mockMvc.perform(post("/login")
                 .contentType(APPLICATION_JSON_VALUE)

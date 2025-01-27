@@ -21,7 +21,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static ai.conexa.challenge.security.user.RolesEnum.ROLE_ADMIN;
 import static ai.conexa.challenge.util.MessageConstants.RESOURCE_NOT_FOUND;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -75,7 +78,7 @@ class FilmIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/films")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].title", is("Test Film")))
@@ -108,7 +111,7 @@ class FilmIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/films/1")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title", is("Test Film")))
                 .andExpect(jsonPath("$.director", is("Test Director")));
@@ -121,7 +124,7 @@ class FilmIntegrationTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(get("/films/1")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(RESOURCE_NOT_FOUND)));
     }
@@ -129,7 +132,7 @@ class FilmIntegrationTest {
     @Test
     void testGetFilmById_authorizedWithBadIdFormat_shouldReturn400() throws Exception {
         mockMvc.perform(get("/films/abc")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -159,7 +162,7 @@ class FilmIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/films/?title=Test Film")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].title", is("Test Film")))
@@ -169,14 +172,14 @@ class FilmIntegrationTest {
     @Test
     void testGetFilmByTitle_authorizedWithoutTitleParam_shouldReturn400() throws Exception {
         mockMvc.perform(get("/films/")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetFilmByTitle_authorizedWithBlankTitle_shouldReturn400() throws Exception {
         mockMvc.perform(get("/films/?title=")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 }

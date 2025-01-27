@@ -23,7 +23,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static ai.conexa.challenge.security.user.RolesEnum.ROLE_ADMIN;
 import static ai.conexa.challenge.util.MessageConstants.RESOURCE_NOT_FOUND;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -70,7 +73,7 @@ class StarshipIntegrationTest {
         when(restTemplate.getForObject(URL, PaginatedResponse.class)).thenReturn(response);
 
         mockMvc.perform(get("/starships?page=1&size=1")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.results", hasSize(1)))
                 .andExpect(jsonPath("$.results[0].uid", is("1")))
@@ -81,14 +84,14 @@ class StarshipIntegrationTest {
     @Test
     void testGetStarshipPaginated_authorizedWithPageEqualsToZero_shouldReturn400() throws Exception {
         mockMvc.perform(get("/starships?page=0&size=1")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetStarshipPaginated_authorizedWithSizeEqualsToZero_shouldReturn400() throws Exception {
         mockMvc.perform(get("/starships?page=1&size=0")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -117,7 +120,7 @@ class StarshipIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/starships/1")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("CR90 corvette")));
     }
@@ -129,7 +132,7 @@ class StarshipIntegrationTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(get("/starships/1")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(RESOURCE_NOT_FOUND)));
     }
@@ -137,7 +140,7 @@ class StarshipIntegrationTest {
     @Test
     void testGetStarshipById_authorizedWithBadIdFormat_shouldReturn400() throws Exception {
         mockMvc.perform(get("/starships/abc")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -166,7 +169,7 @@ class StarshipIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/starships/?name=CR90 corvette")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("CR90 corvette")));
@@ -175,14 +178,14 @@ class StarshipIntegrationTest {
     @Test
     void testGetStarshipByName_authorizedWithoutNameParam_shouldReturn400() throws Exception {
         mockMvc.perform(get("/starships/")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetStarshipByName_authorizedWithBlankName_shouldReturn400() throws Exception {
         mockMvc.perform(get("/starships/?name=")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 }

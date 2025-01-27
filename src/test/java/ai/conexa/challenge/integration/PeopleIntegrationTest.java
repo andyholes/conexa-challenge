@@ -23,7 +23,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static ai.conexa.challenge.security.user.RolesEnum.ROLE_ADMIN;
 import static ai.conexa.challenge.util.MessageConstants.RESOURCE_NOT_FOUND;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
@@ -49,6 +52,7 @@ class PeopleIntegrationTest {
     private ObjectMapper objectMapper;
     @Autowired
     private JwtUtils jwtUtils;
+
     private static final String URL = "mock-url";
 
     @Test
@@ -71,7 +75,7 @@ class PeopleIntegrationTest {
                 .thenReturn(response);
 
         mockMvc.perform(get("/people?page=1&size=2")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.results", hasSize(1)))
                 .andExpect(jsonPath("$.results[0].uid", is("1")))
@@ -82,14 +86,14 @@ class PeopleIntegrationTest {
     @Test
     void testGetPeoplePaginated_authorizedWithPageEqualsToZero_shouldReturn400() throws Exception {
         mockMvc.perform(get("/people?page=0&size=2")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetPeoplePaginated_authorizedWithSizeEqualsToZero_shouldReturn400() throws Exception {
         mockMvc.perform(get("/people?page=1&size=0")
-                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -119,7 +123,7 @@ class PeopleIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/people/1")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", is("Luke Skywalker")))
                 .andExpect(jsonPath("$.hair_color", is("Black")));
@@ -132,7 +136,7 @@ class PeopleIntegrationTest {
                 .thenThrow(new HttpClientErrorException(HttpStatus.NOT_FOUND));
 
         mockMvc.perform(get("/people/1")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", is(RESOURCE_NOT_FOUND)));
     }
@@ -140,7 +144,7 @@ class PeopleIntegrationTest {
     @Test
     void testGetPeopleById_authorizedWithBadIdFormat_shouldReturn400() throws Exception {
         mockMvc.perform(get("/people/abc")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -170,7 +174,7 @@ class PeopleIntegrationTest {
                 .thenReturn(ResponseEntity.ok(objectMapper.writeValueAsString(response)));
 
         mockMvc.perform(get("/people/?name=Luke Skywalker")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].name", is("Luke Skywalker")))
@@ -180,14 +184,14 @@ class PeopleIntegrationTest {
     @Test
     void testGetPeopleByName_authorizedWithoutNameParam_shouldReturn400() throws Exception {
         mockMvc.perform(get("/people/")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void testGetPeopleByName_authorizedWithBlankName_shouldReturn400() throws Exception {
         mockMvc.perform(get("/people/?name=")
-                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin")))
+                        .header(AUTHORIZATION, "Bearer " + jwtUtils.generateToken("admin", Stream.of(ROLE_ADMIN).collect(Collectors.toSet()))))
                 .andExpect(status().isBadRequest());
     }
 }
